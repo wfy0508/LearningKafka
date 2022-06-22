@@ -26,7 +26,9 @@ public class ProducerCallback {
             producer.send(new ProducerRecord<String, String>("test", "hello" + i), new Callback() {
                 @Override
                 public void onCompletion(RecordMetadata metadata, Exception exception) {
-                    if (exception == null) {
+                    if (exception != null) {
+                        exception.printStackTrace();
+                    } else {
                         System.out.println("主题: " + metadata.topic() + " 分区: " + metadata.partition() + " 偏移量: " + metadata.offset());
                     }
                 }

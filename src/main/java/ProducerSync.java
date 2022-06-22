@@ -25,6 +25,8 @@ public class ProducerSync {
         // 5. 调用生产者对象的send方法发送消息
         for (int i = 0; i < 5; i++) {
             // 在send方法之后加上get()方法，会等待所有的消息发送成功之后，才会进行下一步动作
+            // 调用了get()方法来阻塞等待Kafka的响应，直到消息发送成功，或者发生异常。
+            // 如果发生异常，那么就需要捕获异常并交由外层逻辑处理。
             producer.send(new ProducerRecord<String, String>("test", "hello" + i)).get();
         }
         // 6. 关闭生产者对象

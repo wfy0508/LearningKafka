@@ -20,6 +20,7 @@ public class Producer {
         // 3. 配置key, value序列化属性
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
+        props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, DemoPartitioner.class.getName());
 
         // 4. 创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
