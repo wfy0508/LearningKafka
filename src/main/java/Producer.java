@@ -22,8 +22,11 @@ public class Producer {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         // 分区器
         props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, DemoPartitioner.class.getName());
-        // 拦截器
-        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, ProducerInterceptorPrefix.class.getName());
+        // 拦截器(多个拦截器用逗号隔开)
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG,
+                ProducerInterceptorPrefix.class.getName() +
+                "," +
+                ProducerInterceptorPlus.class.getName());
 
         // 4. 创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
