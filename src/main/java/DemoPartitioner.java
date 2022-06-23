@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author summer
  * @project_name IntelliJ IDEA
  * @create_time 2022-06-22 18:06:24
- * @description
+ * @description 自定义分区器
  */
 public class DemoPartitioner implements Partitioner {
     private final AtomicInteger counter = new AtomicInteger(0);
