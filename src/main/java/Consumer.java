@@ -2,9 +2,11 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
 
@@ -27,12 +29,22 @@ public class Consumer {
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         // 4. 订阅主题
         consumer.subscribe(Collections.singletonList("test"));
+
+        // 订阅某个主题的特定分区
+        // consumer.assign(Arrays.asList(new TopicPartition("test", 0)));
+
         // 5. 消费消息
         while (true) {
             // 6. 获取消息
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-            for (ConsumerRecord<String, String> record : records) {
-                System.out.println(record.value());
+            //for (ConsumerRecord<String, String> record : records) {
+            //    System.out.println(record.value());
+            //}
+            // 获取消息集中的所有分区
+            for (TopicPartition tp : records.partitions()) {
+                for (ConsumerRecord<String, String> record : records.records(tp)) {
+                    System.out.println(record.partition() + ":" + record.value());
+                }
             }
             //consumer.close();
         }
