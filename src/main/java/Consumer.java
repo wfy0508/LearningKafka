@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author summer
@@ -18,6 +19,8 @@ import java.util.Properties;
  * @description
  */
 public class Consumer {
+    public static final AtomicBoolean IS_RUNNING = new AtomicBoolean(true);
+
     public static void main(String[] args) {
         // 1. 创建消费者配置对象
         Properties props = new Properties();
@@ -35,7 +38,7 @@ public class Consumer {
         // consumer.assign(Arrays.asList(new TopicPartition("test", 0)));
 
         // 5. 消费消息
-        while (true) {
+        while (IS_RUNNING.get()) {
             // 6. 获取消息
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
             // 6.1 直接打印输出消费的消息
@@ -48,7 +51,9 @@ public class Consumer {
                     System.out.println(record.partition() + ":" + record.value());
                 }
             }
-            //consumer.close();
+            if(records.isEmpty()){
+                IS_RUNNING.set(false);
+            }
         }
     }
 }
