@@ -37,10 +37,11 @@ public class Consumer {
         while (true) {
             // 6. 获取消息
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
+            // 6.1 直接打印输出消费的消息
             //for (ConsumerRecord<String, String> record : records) {
             //    System.out.println(record.value());
             //}
-            // 获取消息集中的所有分区
+            // 6.2 获取消息集中的所有分区
             for (TopicPartition tp : records.partitions()) {
                 for (ConsumerRecord<String, String> record : records.records(tp)) {
                     System.out.println(record.partition() + ":" + record.value());
