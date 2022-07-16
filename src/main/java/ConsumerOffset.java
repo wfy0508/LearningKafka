@@ -1,7 +1,4 @@
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
@@ -14,10 +11,10 @@ import java.util.Properties;
 /**
  * @author summer
  * @project_name IntelliJ IDEA
- * @create_time 2022-06-18 17:09:40
- * @description
+ * @create_time 2022-07-16 13:53:40
+ * @description lastConsumedOffset、committed offset和position之间的关系
  */
-public class Consumer {
+public class ConsumerOffset {
     public static void main(String[] args) {
         // 1. 创建消费者配置对象
         Properties props = new Properties();
@@ -29,26 +26,24 @@ public class Consumer {
         // 3. 创建消费者对象
         KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         // 4. 订阅主题
-        consumer.subscribe(Collections.singletonList("test"));
-
-        // 订阅某个主题的特定分区
-        // consumer.assign(Arrays.asList(new TopicPartition("test", 0)));
-
-        // 5. 消费消息
+        TopicPartition tp = new TopicPartition("test", 0);
+        consumer.assign(Collections.singletonList(tp));
+        // 当前消费到的位移
+        long lastConsumerOffset = -1;
         while (true) {
-            // 6. 获取消息
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-            // 6.1 直接打印输出消费的消息
-            //for (ConsumerRecord<String, String> record : records) {
-            //    System.out.println(record.value());
-            //}
-            // 6.2 获取消息集中的所有分区
-            for (TopicPartition tp : records.partitions()) {
-                for (ConsumerRecord<String, String> record : records.records(tp)) {
-                    System.out.println(record.partition() + ":" + record.value());
-                }
+            if (records.isEmpty()) {
+                break;
             }
-            //consumer.close();
+            List<ConsumerRecord<String, String>> partitionRecords = records.records(tp);
+            lastConsumerOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
+            // 同步提交消费位移，整个消息集同步提交
+            consumer.commitAsync();
         }
+        System.out.println("consumed offset is " + lastConsumerOffset);
+        OffsetAndMetadata offsetAndMetadata = consumer.committed(tp);
+        System.out.println("committed offset is " + offsetAndMetadata.offset());
+        long position = consumer.position(tp);
+        System.out.println("the offset of the next record is " + position);
     }
 }
