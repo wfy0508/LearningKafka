@@ -1,3 +1,4 @@
+import jdk.nashorn.internal.codegen.ClassEmitter;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -53,5 +54,22 @@ public class ConsumerSyncBatch {
                 consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(offset + 1)));
             }
         }*/
+
+        try {
+            while (IS_RUNNING.get()) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
+                for (TopicPartition partition : records.partitions()) {
+                    List<ConsumerRecord<String, String>> partitionRecords = records.records(partition);
+                    for (ConsumerRecord<String, String> record : partitionRecords) {
+                        // do something
+                        System.out.println(record.toString());
+                    }
+                    long lastConsumerOffset = partitionRecords.get(partitionRecords.size() - 1).offset();
+                    consumer.commitSync(Collections.singletonMap(partition, new OffsetAndMetadata(lastConsumerOffset + 1)));
+                }
+            }
+        } finally {
+            consumer.close();
+        }
     }
 }
