@@ -28,7 +28,7 @@ public class Producer {
         // 4. 创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
         // 5. 调用生产者对象的send方法发送消息
-        for (int i = 0; i < 500; i++) {
+        for (int i = 0; i < 20; i++) {
             producer.send(new ProducerRecord<String, String>("test", "hello" + i));
         }
         // 6. 关闭生产者对象
