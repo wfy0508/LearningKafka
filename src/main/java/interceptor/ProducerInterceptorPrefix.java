@@ -1,3 +1,5 @@
+package interceptor;
+
 import org.apache.kafka.clients.producer.ProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
@@ -7,14 +9,18 @@ import java.util.Map;
 /**
  * @author summer
  * @project_name IntelliJ IDEA
- * @create_time 2022-06-23 13:40:27
- * @description 实现第二个拦截器
+ * @create_time 2022-06-23 11:20:02
+ * @description 实现第一个拦截器
  */
-public class ProducerInterceptorPlus implements ProducerInterceptor<String, String> {
+public class ProducerInterceptorPrefix implements ProducerInterceptor<String, String> {
+    private volatile long sendSuccess = 0;
+    private volatile long sendFailure = 0;
+
     @Override
     public ProducerRecord<String, String> onSend(ProducerRecord<String, String> record) {
-        String modifiedValue = "prefix2-" + record.value();
-        return new ProducerRecord<>(
+        // 给原始value值，加上前缀prefix1-
+        String modifiedValue = "prefix1-" + record.value();
+        return new ProducerRecord<String, String>(
                 record.topic(),
                 record.partition(),
                 record.timestamp(),
@@ -26,12 +32,17 @@ public class ProducerInterceptorPlus implements ProducerInterceptor<String, Stri
 
     @Override
     public void onAcknowledgement(RecordMetadata metadata, Exception exception) {
-
+        if (exception == null) {
+            sendSuccess++;
+        } else {
+            sendFailure++;
+        }
     }
 
     @Override
     public void close() {
-
+        double successRatio = (double) sendSuccess / (sendSuccess + sendFailure);
+        System.out.println("[Info] 发送成功率：" + String.format("%f", successRatio * 100) + "%");
     }
 
     @Override

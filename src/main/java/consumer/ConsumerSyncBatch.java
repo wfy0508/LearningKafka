@@ -1,3 +1,5 @@
+package consumer;
+
 import jdk.nashorn.internal.codegen.ClassEmitter;
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.TopicPartition;
