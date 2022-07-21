@@ -40,7 +40,8 @@ public class ConsumerExpireRecords {
                     System.out.println("topic: " + record.topic() +
                             ", partition: " + record.partition() +
                             ", key: " + record.key() +
-                            ", value: " + record.value());
+                            ", value: " + record.value()+
+                            "， offset: "+record.offset());
                 }
             }
         }
