@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @author summer
  * @project_name IntelliJ IDEA
  * @create_time 2022-06-18 17:09:40
- * @description
+ * @description 配置消费者拦截器，并消费超时的消息
  */
 public class ConsumerExpireRecords {
     public static final AtomicBoolean IS_RUNNING = new AtomicBoolean(true);

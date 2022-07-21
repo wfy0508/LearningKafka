@@ -16,7 +16,7 @@ import java.util.Map;
  * @author summer
  * @project_name IntelliJ IDEA
  * @create_time 2022-07-17 16:33:05
- * @description 消费者拦截器，实现超时消息处理
+ * @description 消费者拦截器，实现超时消息拦截处理
  */
 
 public class ConsumerInterceptorTest implements ConsumerInterceptor<String, String> {

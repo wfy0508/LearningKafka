@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
  * @author summer
  * @project_name IntelliJ IDEA
  * @create_time 2022-06-18 16:54:03
- * @description 创建一个Kafka生产者
+ * @description 创建一个Kafka生产者，用于发送超时消息和正常消息
  */
 public class ProducerExpireRecords {
     /**
