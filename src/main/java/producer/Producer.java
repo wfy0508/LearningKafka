@@ -44,4 +44,15 @@ public class Producer {
 
 
     }
+
+    public static void createTopic() {
+        String[] options = new String[]{
+                "--bootstrap-server", "node1:9092",
+                "--create",
+                "--replication-factor", "1",
+                "--partitions", "1",
+                "--topic", "topic-create-api"
+        };
+        kafka.admin.TopicCommand.main(options);
+    }
 }
