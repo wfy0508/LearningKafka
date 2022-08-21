@@ -8,9 +8,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.StringDeserializer;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,7 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Consumer {
     public static final AtomicBoolean IS_RUNNING = new AtomicBoolean(true);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // 1. 创建消费者配置对象
         Properties props = new Properties();
         // 2. 配置bootstrap.servers属性
@@ -53,9 +51,10 @@ public class Consumer {
                     System.out.println(record.partition() + ":" + record.value());
                 }
             }
-            //if(records.isEmpty()){
-            //    IS_RUNNING.set(false);
-            //}
+            Thread.sleep(2000);
+            if(records.isEmpty()){
+                IS_RUNNING.set(false);
+            }
         }
     }
 }
