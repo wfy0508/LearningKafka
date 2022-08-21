@@ -14,7 +14,7 @@ import java.util.Properties;
  * @description 创建一个Kafka生产者
  */
 public class Producer {
-    public final static String TOPIC = "threadTest";
+    public final static String TOPIC = "test";
     public final static String BROKER_LIST = "node1:9092";
     public final static String GROUP_ID = "group_id";
     public final static long RECORD_CNT = 20;

@@ -12,7 +12,7 @@ import java.util.Properties;
  * @description 创建一个Kafka生产者，并异步发送数据
  */
 public class ProducerCallback {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // 1. 创建生产者配置对象
         Properties props = new Properties();
         // 2. 配置bootstrap.servers属性
@@ -24,17 +24,21 @@ public class ProducerCallback {
         // 4. 创建生产者对象
         KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props);
         // 5. 调用生产者对象的send方法发送消息
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 20; i++) {
             producer.send(new ProducerRecord<String, String>("test", "hello" + i), new Callback() {
-                @Override
-                public void onCompletion(RecordMetadata metadata, Exception exception) {
-                    if (exception != null) {
-                        exception.printStackTrace();
-                    } else {
-                        System.out.println("主题: " + metadata.topic() + " 分区: " + metadata.partition() + " 偏移量: " + metadata.offset());
+                        @Override
+                        public void onCompletion(RecordMetadata metadata, Exception exception) {
+                            if (exception != null) {
+                                exception.printStackTrace();
+                            } else {
+                                System.out.println("topicName: " + metadata.topic() +
+                                        " partition: " + metadata.partition() +
+                                        " offset: " + metadata.offset());
+                            }
+                        }
                     }
-                }
-            });
+            );
+            Thread.sleep(2000);
         }
         // 6. 关闭生产者对象
         producer.close();
